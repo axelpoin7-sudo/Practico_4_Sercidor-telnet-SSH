@@ -1,0 +1,47 @@
+sudo apt update
+
+# 2. Instalar telnet server, cliente y xinetd (el que maneja telnet)
+sudo apt install telnetd xinetd telnet -y
+
+# 3. Ver que se creó la config
+ls /etc/xinetd.d/telnet
+
+# 4. Ver la config
+cat /etc/xinetd.d/telnet
+
+# 5. Si dice disable = yes, cambiarlo a no:
+sudo nano /etc/xinetd.d/telnet
+
+# 6. Habilitar y arrancar el servicio xinetd
+sudo systemctl enable xinetd
+sudo systemctl start xinetd
+sudo systemctl restart xinetd
+
+# 7. Ver que está corriendo
+sudo systemctl status xinetd
+sudo ss -tulpn | grep :23
+
+# 8. Hacer respaldo de la config (lo que ya hiciste)
+sudo cp /etc/xinetd.d/telnet ~/telnet_backup.conf
+cp /etc/ssh/sshd_config ~/sshd_config_backup.conf
+ls -lh ~/*backup.conf
+# 1. Actualizar la lista de paquetes del sistema
+sudo apt update
+
+# 2. Instalar TShark (la versión de línea de comandos de Wireshark para servidor)
+sudo apt install -y tshark
+
+# 3. Permitir que usuarios no-root puedan capturar paquetes
+sudo dpkg-reconfigure wireshark-common
+
+# 4. Agregar el usuario actual al grupo de Wireshark
+sudo usermod -aG wireshark $USER
+
+# 5. Aplicar los cambios de grupo a la sesión actual
+newgrp wireshark
+
+#Comprobar la versión instalada de TShark
+tshark --version
+
+# Probar la captura capturando los primeros 5 paquetes en cualquier interfaz
+tshark -c 5 -i any
